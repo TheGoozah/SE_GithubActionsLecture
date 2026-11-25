@@ -1,0 +1,55 @@
+name: '[Demo_7] Release with Approval'
+run-name: Release v1.0.${{ github.run_number }}
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Configure CMake
+        run: cmake -S . -B build
+
+      - name: Build Release
+        run: cmake --build build --config Release
+
+      - name: Upload executable
+        uses: actions/upload-artifact@v7
+        with:
+          name: ci-demo-windows
+          path: build/Release/CI_Demo.exe
+          retention-days: 5
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+      url: ${{ github.server_url }}/${{ github.repository }}/releases
+    permissions:
+      contents: write
+    steps:
+      - name: Download executable
+        uses: actions/download-artifact@v8
+        with:
+          name: ci-demo-windows
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "v1.0.${{ github.run_number }}" CI_Demo.exe \
+            --repo "${{ github.repository }}" \
+            --target "${{ github.sha }}" \
+            --title "CI Demo v1.0.${{ github.run_number }}" \
+            --generate-notes
