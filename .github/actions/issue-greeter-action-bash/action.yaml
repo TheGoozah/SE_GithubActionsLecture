@@ -1,0 +1,31 @@
+name: "Issue Greeter Action (Bash)"
+description: "Automatically greets users when they open an issue (using Bash)"
+
+inputs:
+  issue-url:
+    description: "The API URL of the issue"
+    required: true
+  comment-body:
+    description: "The greeting message to post"
+    required: true
+  token:
+    description: "Authorization token with at least issue-write scope"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      env:
+        COMMENT_BODY: ${{ inputs.comment-body }}
+        ISSUE_URL: ${{ inputs.issue-url }}
+        TOKEN: ${{ inputs.token }}
+      run: |
+        set -e
+        echo "Starting Greeter Action"
+        jq -n --arg body "$COMMENT_BODY" '{body: $body}' \
+          | curl -sS -X POST \
+              -H "Authorization: Bearer $TOKEN" \
+              -H "Content-Type: application/json" \
+              -d @- "$ISSUE_URL/comments"
+        echo "Comment Posted Successfully!"
