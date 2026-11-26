@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=https://json.schemastore.org/dependabot-2.0.json
+version: 2
+updates:
+    -   package-ecosystem: "github-actions"
+        directory: "/"
+        schedule:
+            interval: "weekly"
+            day: "monday"
+            time: "09:00"
+            timezone: "Europe/Brussels"
+        
+        # Group related updates together
+        groups:
+            github-actions:
+                patterns:
+                    - "actions/*"
+                    - "github/*"
+            ci-tools:
+                patterns:
+                    - "schneegans/*"
+                    - "ilammy/*"
+                    - "msys2/*"
+        
+        # Better commit messages
+        commit-message:
+            prefix: "chore"
+            prefix-development: "chore"
+            include: "scope"
+        
+        labels:
+            - "dependencies"
+            - "github-actions"
+        
+        reviewers:
+            - "TheGoozah"
+        assignees:
+            - "TheGoozah"
+        
+        open-pull-requests-limit: 10
