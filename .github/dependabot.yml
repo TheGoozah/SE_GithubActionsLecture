@@ -31,9 +31,7 @@ updates:
             - "dependencies"
             - "github-actions"
         
-        reviewers:
-            - "TheGoozah"
-        assignees:
-            - "TheGoozah"
+        #assignees:
+        #    - "TheGoozah"
         
         open-pull-requests-limit: 10
