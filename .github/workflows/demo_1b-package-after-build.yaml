@@ -3,7 +3,7 @@ run-name: Package after Build & Test
 
 on:
   workflow_run:
-    workflows: ['[Demo_1] Build & Test']   # must match the "name:" of demo_1, not its run-name
+    workflows: ['\[Demo_1\] Build & Test']   # must match the "name:" of demo_1, not its run-name
     types: [completed]                     # start when it has finished
 
 jobs:
